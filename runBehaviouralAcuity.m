@@ -4,9 +4,7 @@ global rM
 if ~exist('rM','var') || isempty(rM)
 	rM = arduinoManager();
 end
-rM.openGUI = false;
 if ~rM.isOpen; open(rM); drawnow; end %open our reward manager
-
 
 %===============compatibility for windows===================
 %if ispc; PsychJavaTrouble(); end
@@ -16,7 +14,7 @@ KbName('UnifyKeyNames');
 ana.date		= datestr(datetime);
 ana.version		= Screen('Version');
 ana.computer	= Screen('Computer');
-ana.gpu			= opengl('data');
+ana.gpu			= rendererinfo;
 staircase = [];
 
 %===================experiment parameters===================
@@ -119,29 +117,29 @@ fprintf('\n--->>> Behavioural Acuity Opened Screen %i : %s\n', sM.win, sM.fullNa
 setup(stimuli,sM); %setup our stimulus object
 
 PsychPortAudio('Close');
-sM.audio = audioManager(); sM.audio.close();
+aM = audioManager(); aM.close();
 if IsLinux
-	sM.audio.device		= [];
+	aM.device		= [];
 elseif IsWin
-	sM.audio.device		= [];
+	aM.device		= [];
 end
-sM.audio.setup();
+aM.setup();
 	
 %=============================================================
 %===========================tobii manager=====================
 eT						= tobiiManager();
 eT.verbose				= ana.debug;
 eT.name					= ana.nameExp;
-eT.model				= ana.tracker;
-eT.trackingMode			= ana.trackingMode;
-eT.eyeUsed				= ana.eyeUsed;
+eT.calibration.model	= ana.tracker;
+eT.calibration.mode		= ana.trackingMode;
+eT.calibration.eyeUsed	= ana.eyeUsed;
 eT.sampleRate			= ana.sampleRate;
-eT.calibrationStimulus	= ana.calStim;
-eT.manualCalibration	= ana.calManual;
-eT.calPositions			= ana.calPos;
-eT.valPositions			= ana.valPos;
-eT.autoPace				= ana.autoPace;
-eT.paceDuration			= ana.paceDuration;
+eT.calibration.stimulus	= ana.calStim;
+eT.calibration.manual	= ana.calManual;
+eT.calibration.calPositions			= ana.calPos;
+eT.calibration.valPositions			= ana.valPos;
+eT.calibration.autoPace				= ana.autoPace;
+eT.calibration.paceDuration			= ana.paceDuration;
 eT.smoothing.nSamples	= ana.nSamples;
 eT.smoothing.method		= ana.smoothMethod;
 eT.smoothing.window		= ana.w;
@@ -684,9 +682,9 @@ end
 		if response > 0
 			if ana.task(thisRun).contrast > 0
 				rM.timedTTL();
-				sM.audio.beep(1000,0.1,0.1);
+				aM.beep(1000,0.1,0.1);
 			elseif ana.task(thisRun).contrast == 0
-				sM.audio.beep(100,0.75,0.75);
+				aM.beep(100,0.75,0.75);
 			end
 			ana.task(thisRun).response = response;
 			timeOut				= ana.IFI;
@@ -715,7 +713,7 @@ end
 			end
 		%===================================================CORRECT BLANK ONLY
 		elseif response == 0 && taskType < 3
-			sM.audio.beep(1000,0.1,0.1);
+			aM.beep(1000,0.1,0.1);
 			rM.timedTTL();
 			ana.task(thisRun).response	= response;
 			timeOut						= ana.IFI;
@@ -732,10 +730,10 @@ end
 		else
 			if ana.task(thisRun).contrast == 0 && response == BREAKTARGET
 				rM.timedTTL();
-				sM.audio.beep(1000,0.1,0.1);
+				aM.beep(1000,0.1,0.1);
 				fprintf('--->>> Reward given as contrast == 0, although trial is incorrect!\n');
 			elseif response ~= BREAKINIT
-				sM.audio.beep(100,0.75,0.75);
+				aM.beep(100,0.75,0.75);
 			end
 			ana.task(thisRun).response = response;
 			timeOut					= ana.punishIFI;
