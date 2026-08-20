@@ -34,6 +34,7 @@ Data supporting the manuscript are publicly available at: https://doi.org/10.608
 
 | File | Purpose | Corresponding manuscript part |
 |------|---------|-------------------------------|
+| `Helmet/` | THe Helmet STL model files for 3D printing a non-invasive head restraint. | Fig. 1 |
 | `basicTraining.mlapp` | GUI to train subjects to fixation and run the fixation-only sVEP test measuring contrast-sensitivity function. | "Fixation-only Contrast Threshold Measurement" |
 | `runBasicTraining.m` | Core trial enfine for basicTraining. | "Fixation-only Contrast Threshold Measurement" |
 | `behaviouralAcuity.mlapp` | GUI to run the eye-tracker-based psychophysical acuity/contrast task (training stages + measurement). | "Psychophysical Contrast Threshold Measurement" |
@@ -98,7 +99,7 @@ flowchart TD
    ```
    On the *Control* tab fill in: subject name, save/result directory, luminance calibration file (gamma table, e.g. `AorusFI27-120Hz-NEWcalibration.mat`), screen distance / pixels-per-cm, colour depth (`Native10Bit` on the AORUS), background colour.
 
-   ![Behavioural Acuity GUI — Control tab (experiment metadata, task/stimulus settings, staircase options, Run buttons)](Images/gui.png)
+   ![Behavioural Acuity GUI — Control tab (experiment metadata, task/stimulus settings, staircase options, Run buttons)](Images/behaviour-gui.png)
 
    The *Control* tab groups the experiment metadata into a **General** panel (subject, result directory, calibration file, monitor geometry/colour depth, task type and block count) and a **Task / Stimulus Options** panel (all stimulus parameter, timing and Bayesian-staircase settings listed in step 2), with **GO! / Save! / Exit!** at the bottom.
 
@@ -111,7 +112,7 @@ flowchart TD
 
 3. **Eye-tracker tab**: tracker model (`TX300`, `Pro Spectrum`, `Pro 4C`), tracking mode **`macaque`**, sample rate (300 Hz), calibration/validation positions, and the Titta-based **adaptive calibration** for non-verbal subjects (Niehorster et al. 2024). Use dummy mode (`isDummy`) to test without hardware.
 
-   ![Behavioural Acuity GUI — EyeTracker tab (tracker settings, fixation window, fixation-cross parameters, calibration/smoothing)](Images/tobii.png)
+   ![Behavioural Acuity GUI — EyeTracker tab (tracker settings, fixation window, fixation-cross parameters, calibration/smoothing)](Images/behaviour-tobii-gui.png)
 
    The *EyeTracker* tab holds the **Eyetracker settings** (model, tracking mode, calibration stimulus, sample-rate dial), the **Initial Fixation Window** (X/Y, `INIT`/`FIX` times, radius, strictness), **Fixation Cross Parameters** (size, alpha, line width) and the **Calibration / Smoothing** panel implementing the Titta adaptive/operator-paced calibration and gaze smoothing used for non-verbal subjects.
 
@@ -129,7 +130,7 @@ flowchart TD
 
 #### Recording (basicTraining session)
 
-![Basic fixation training and sVEP Measurement](Images/sVEP.png)
+![Basic fixation training and sVEP Measurement](Images/sVEP-gui.png)
 
 The sVEP session is a **custom Opticka protocol** run via a specialised GUI: vertical sine gratings, five SFs, 11 contrast levels + blank (96→0.5% + 0%), 10 trials per contrast per block, 4 blocks → 40 trials/condition; trial starts after 500 ms confirmed fixation, 1500 ms stimulus, 2000 ms inter-trial interval; **15 Hz temporal frequency**; 15.6×26.4° at 60 cm; 75 cd/m², gamma-linearised, 10-bit. Save the Opticka session `.mat` and the EDF from the EEG.
 
