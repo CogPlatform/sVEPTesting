@@ -2,29 +2,33 @@
 
 Steady-state Visual Evoked Potential (sVEP) and psychophysical contrast-sensitivity testing for **alert infant macaques**, combining real-time eye tracking with a non-invasive 3D-printed head restraint.
 
-This repository contains the MATLAB code and GUIs used for the experiments described in:
+This repository contains the 3D STL models, MATLAB code and GUIs used for the experiments described in:
 
 > **"Non-invasive Measurements of Visual Sensitivity using Eye Tracking and Visual Evoked Potentials in Young Alert Macaques"**
 > Shu Wang, Yuanyang Huang, Jiahao Tu, Xiaochun Wang, Rui Liu, Shahab Zarei, Hong Liu, Ian M. Andolina.
+
+The models can be 3D printed and modified as required. For an exmaple, the assembled helmet + ear-bridge + sample EEG placement can be seen here:
+
+<https://github.com/CogPlatform/sVEPTesting/blob/main/Helmet/EEG%20helmet.STL>
 
 The code implements the two measurement arms of the study:
 
 1. **sVEP contrast-sensitivity (CS) measurement** — objective, electrophysiological estimation of contrast thresholds from steady-state VEPs recorded while the monkey passively fixates gratings flickering at 15 Hz, with gaze-triggered trial selection and rigorous trial screening using the eye tracker.
 2. **Psychophysical contrast-sensitivity measurement** — an eye-movement-based behavioural choice task (saccade to a peripheral target = "I saw the grating", maintain fixation = blank), which provides the reference behaviour for validating the sVEP estimates (Fig. 1D in the manuscript).
 
-Both pipelines share the same stimulus family (vertically oriented sine-wave gratings, 0.5–8 cycles/deg, 0.5–96% contrast), the same eye tracker (Tobii, via Titta), and the same reward system (Arduino-controlled juice delivery via the Opticka `arduinoManager`).
+Both pipelines share the same stimulus family (vertically oriented sine-wave gratings, 0.5–8 cycles/deg, 0.5–96% contrast), the same eye tracker (Tobii TX300, via Titta), and the same reward system (Arduino-controlled juice delivery via the Opticka `arduinoManager`).
 
 ---
 
 ## Citation
 
-If you use this code in your research, please cite the manuscript (once published) and the software on which it depends:
+If you use this code in your research, please cite the manuscript (once published), and the software on which it depends:
 
-- Andolina, I. M. (2023). **Opticka: Psychophysics-toolbox based experiment manager** (v2.16.1). Zenodo. https://doi.org/10.5281/zenodo.13756387
 - Kleiner, M., et al. (2007). *What's New in Psychtoolbox-3*. Perception 36:1–16.
 - Niehorster, D. C., Andersson, R., & Nyström, M. (2020). **Titta: A toolbox for creating PsychToolbox and Psychopy experiments with Tobii eye trackers**. Behavior Research Methods 52:1970–1979.
-- Niehorster, D. C., et al. (2024). *Enhancing eye tracking for nonhuman primates… adaptive calibration*. Behavior Research Methods 57:4.
+- Andolina, I. M. (2023). **Opticka: Psychophysics-toolbox based experiment manager** (v2.16.1). Zenodo. https://doi.org/10.5281/zenodo.13756387
 - Oostenveld, R., et al. (2011). **FieldTrip: Open source software for advanced analysis of MEG, EEG and invasive electrophysiological data**. Computational Intelligence and Neuroscience 2011:156869.
+- Niehorster, D. C., et al. (2023). *Enhancing eye tracking for nonhuman primates… adaptive calibration*. Behavior Research Methods 57:4.
 
 Data supporting the manuscript are publicly available at: https://doi.org/10.6084/m9.figshare.31802695
 
@@ -55,9 +59,9 @@ Data supporting the manuscript are publicly available at: https://doi.org/10.608
 ### Software
 
 - **MATLAB** (R2021b or later; the `.mlapp` files are App Designer apps and must be opened inside MATLAB — double-click them or type `open behaviouralAcuity.mlapp` in the command window).
-- [**Opticka**](https://github.com/iandol/opticka) — the experiment-manager toolbox used by the manuscript. It provides `screenManager`, the stimulus classes (`gratingStimulus`, `discStimulus`, `fixationCrossStimulus`, `metaStimulus`), `calibrateLuminance` (gamma-table calibration), `audioManager`, `arduinoManager`, `labJackT` (LabJack strobe), `tobiiManager` (Titta interface), `stimulusSequence`, and the `analysisCore` helper class used by `runEEGAnalysis`.
+- [**Opticka**](https://github.com/iandol/opticka) — the experiment-manager toolbox used by the manuscript. It provides `screenManager`, multiple stimulus classes (`gratingStimulus`, `discStimulus`, `fixationCrossStimulus`, `metaStimulus`), `calibrateLuminance` (gamma-table calibration), `audioManager`, `arduinoManager`, `labJackT` (LabJack strobe), `tobiiManager` (Titta interface), `stimulusSequence`, and the `analysisCore` helper class used by `runEEGAnalysis`.
 - **Psychophysics Toolbox (PTB)** — screen/audio/input, required by Opticka.
-- **Palamedes** (v1.11+) — psychometric fitting (`PAL_*`) used by the behavioural analysis and by the staircase option.
+- **Palamedes** (v1.11+) — psychometric fitting (`PAL_*`) used by the behavioural analysis and by the staircase option (we didn't use the staircase in the paper, but it is an option).
 - **FieldTrip** — EEG preprocessing / timelocked / frequency analysis (`ft_preprocessing`, `ft_definetrial`, `ft_timelockanalysis`, ...).
 - **Titta** (and the Tobii Pro SDK) — eye-tracker wrapper used by Opticka's `tobiiManager`.
 
@@ -66,10 +70,10 @@ Data supporting the manuscript are publicly available at: https://doi.org/10.608
 - Eye tracker: Tobii TX300 / Pro Spectrum / Pro 4C (selectable in the GUIs); remote, non-invasive.
 - EEG system: GRAEL v2 (Compumedics) recorded to EDF in PSG online software at 1024 Hz, band-pass 0.1–300 Hz, 50 Hz notch. O1/O2 electrodes 1.5 cm from the occipital pole, reference on the vertex, ground on the ear.
   - The EDF therefore contains two electrode channels plus 8 trigger ("bit") channels plus a photodiode channel (11 channels total in the default configuration).
-- Trigger interface: LabJack (e.g. U6), writing 8 digital lines as analog signals into the EEG (see *Trigger encoding*).
-- Reward pump: Arduino-controlled solenoid via Opticka `arduinoManager` (`timedTTL()`), with acoustic feedback (1 kHz correct / 100 Hz error tone).
+- Trigger interface: LabJack (e.g. T4), writing 8 digital lines as analog signals into the EEG (see *Trigger encoding*).
+- Reward pump: Arduino-controlled solenoid via Opticka `arduinoManager` (asynchronous `timedTTL()`), with acoustic feedback (1 kHz correct / 100 Hz error tone).
 - Display: AORUS 27" at 60 cm, gamma-corrected (SpectroCalII), **native 10-bit mode** (`Native10Bit` in Opticka/PTB).
-- Non-invasive 3D-printed helmet for restraint of the head (design described in the manuscript; CAD models distributed separately per its Code Availability statement).
+- Non-invasive 3D-printed helmet for gentle restraint of the head (design described in the manuscript; CAD models distributed separately per its Code Availability statement).
 
 ---
 
@@ -138,9 +142,7 @@ The synchronous strobe word is written at trial start (`lM.strobeServer(conditio
 
 ### Analysis (loadEEG GUI)
 
-1. ```matlab
-   loadEEG
-   ```
+1. `loadEEG` 
 2. **Files**: the **MAT** (Opticka session) and the **EDF** (EEG).
 3. **Channel configuration**: **Data #** (EEG channels, default `1:2`), **Trigger #** (8 bit channels, default `3:10`), **Photodiode** (`pDiode`, default `11`). The header button auto-guesses: data `1:n-9`, triggers `n-8:n-1`, pDiode = n.
 4. **Trigger settings**: `threshold` (default `5 * nanmedian`), `minTrigger` (15 ms — events closer are treated as ringing), `jitter` (3 samples), `pad` (0.5 s pre/post).
@@ -155,7 +157,7 @@ Outputs: `info` structure in the base workspace, including `info.daT` — table 
 
 ### Part C — Display calibration validation (`measureContrast.m`)
 
-Verifies the gamma/linearity, bit-depth behaviour and contrast steps with a SpectroCAL: draws gratings at several luminance/contrast steps and measures output in cd/m². Configure the screen first:
+We use `calibrateLuminance`.m from `opticka` to perform the precise gamma curve measurements using a SpectroCalII from Cambridge Research Graphics. This function automatically adjusts the R | G | B values independently, measures a full photometric measurement (including luminance) and after sampling across N values of R G B and L fitting several models to the data, then generating a full gamma table, then applying the gamma table, then remeasuring and validating linearity.`measureContrast.m` then verifies the gamma/linearity, bit-depth behaviour and contrast steps with a SpectroCAL: draws gratings at several luminance/contrast steps and measures output in cd/m². Configure the screen first:
 
 ```matlab
 bitDepth = 'Native10bit';                     % for the AORUS
@@ -186,12 +188,12 @@ Behavioural `.mat`: `ana` (settings + per-trial `ana.task` array: `contrast`, `s
 
 ## Trigger encoding (synchronisation)
 
-The EEG and stimulus are synchronised by **strobed 8-bit words** written by LabJack (`lM.strobeServer(value)`) into 8 EEG bit channels:
+The EEG and stimulus are synchronised by **strobed 8-bit words** written by LabJack (`lM.strobeServer(value)`) into 8 EEG analog channels (our GRAEL EEG system did not support strobed words directly so we had to use analog channels to record the 8 binary lines, other EEG systems will not need this if they can encode digital I/O directly):
 
 - trial start: `lM.strobeServer(conditionValue)` — the word encodes the stimulus condition (e.g. contrast index);
 - trial end: `lM.strobeServer(255)`.
 
-`loadCOGEEG.m` detects the rising flanks on the 8 channels, removes events closer than `minTrigger` (ringing), converts bits → word, and defines a trial as **strobe word ≠ 255 followed by exactly 255** (optionally also requiring word `correctID` = 250 as a final marker). The FieldTrip `trl` matrix column 4 carries the stimulus word (`trialinfo`), which maps to stimuli through `info.seq` (`ana` from the Opticka session). `VEPTest.m` is a complete demonstration of this chain.
+`loadCOGEEG.m` detects the rising flanks on the 8 channels, removes events closer than `minTrigger` (ringing), converts bits → word, and defines a trial as **strobed word ≠ 255 followed by exactly 255** (optionally also requiring word `correctID` = 250 as a final marker). The FieldTrip `trl` matrix column 4 carries the stimulus word (`trialinfo`), which maps to stimuli through `info.seq` (`ana` from the Opticka session). `VEPTest.m` is a complete demonstration of this chain.
 
 ---
 
